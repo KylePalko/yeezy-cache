@@ -1,5 +1,5 @@
 import IStorage from "../core/Storage/IStorage"
-import StorageCacheKeyDoesNotExist from "../core/Storage/Exceptions/StorageCacheKeyDoesNotExist";
+import StorageCacheKeyDoesNotExist from "../core/Storage/Exceptions/StorageCacheKeyDoesNotExist"
 
 class InMemoryStorage implements IStorage {
 

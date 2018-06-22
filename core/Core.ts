@@ -14,7 +14,7 @@ export interface ICore {
 
 const Core: ICore = {
 
-    cache: function(...args: any[]) {
+    cache: function(...args: any[]): (...targetArgs: any[]) => Promise<any> {
 
         if (typeof args[0] === 'function') {
 
@@ -29,11 +29,11 @@ const Core: ICore = {
                     return Promise.resolve(await storage.retrieve(hashKey))
                 } catch (err) {
                     if (err === StorageCacheFailed) {
-                        console.warn(`The Storage provided to Yeezy failed to retrieve the cached value for hash key: ${hashKey}`)
+                        console.warn(`The Storage provided to Yeezy failed to retrieve the cached value for Hash Key: ${hashKey}`)
                         return Promise.resolve(target(...targetArgs))
                     } else if (err === StorageCacheKeyDoesNotExist) {
                         const value = target(...targetArgs)
-                        console.warn(`Yeezy is caching a new value.`)
+                        console.warn(`Yeezy is caching a new value with Hash Key: ${hashKey}`)
                         storage.store(hashKey, value)
                         return Promise.resolve(value)
                     } else {
@@ -83,8 +83,6 @@ const cfn = Core.cache(fn)
 
 (async () => {
     console.log('Run #1', await cfn(1))
-    console.log('Run #2', await cfn(1))
-    console.log('Run #3', await cfn(1))
 })()
 
 export default Core
