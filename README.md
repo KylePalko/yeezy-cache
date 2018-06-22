@@ -1,6 +1,6 @@
 # yeezy-cache
 
-> I'ma clear the cache — [Kanye West](https://genius.com/14749235) 😎💲
+> I'ma clear the cache — [Kanye West](https://genius.com/14749235)
 
 Yeezy Cache provides simple, light, function result caching. By wrapping a function in the `cache` decorator you can avoid repeatedly reaching out to slower external services (such as a database or external API) or performing intensive processing—assuming your functions are [pure functions](https://en.wikipedia.org/wiki/Pure_function), of course, and therefore can be cached.
 
@@ -16,7 +16,7 @@ yarn add yeezy-cache
 
 Next you'll need to configure Yeezy for your use-case (you only need to do this once in your project).
 ```
-import { cache, InMemoryStorage, configure } from "yeezy-cache"
+import { InMemoryStorage, configure } from "yeezy-cache"
 
 configure({
     storage: new InMemoryStorage(),
@@ -24,16 +24,26 @@ configure({
 })
 ```
 
-You're now ready to start caching function return values. To do so, simply wrap your function in the `cache` decorator.
+## Caching your first function
+
+There are two requirements to cache a function:
+
+- Your function _must_ return a promise.
+- Your function _must_ be a pure function.
+
+If your function satisfies this criteria you're ready to start caching. To do so, simply wrap your function in the `cache` decorator.
 ```
-const getUserByID({ id }) => {
-    // Do a database lookup. 
-}
+import { cache } from "yeezy-cache"
+
+const getUserByID({ id }) => new Promise((resolve, reject) => {
+    // ...
+    resolve(result)
+})
 
 export default cache(getUserByID)
 ```
 
-That's it! The first time you call your cached version of `getUserByID()` the result will be fetched from your external service and cached. The next call will return this cached result.
+That's it! The first time you call your cached version of `getUserByID()` the result will be fetched from your external service and cached. All subsequent calls, until the expiration, will be retrieved from your Storage.
 
 ## Configuring
 

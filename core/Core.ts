@@ -8,22 +8,22 @@ export interface ICore {
     storage?: IStorage
     expiration?: number
     getStorage: () => IStorage
-    cache: (functionToCacheOrOptions: any) => (...targetArgs: any[]) => Promise<any>
+    cache: (...args: Array<any>) => (...targetArgs: Array<any>) => Promise<any>
     configure: (options: { storage: IStorage, expiration: number }) => void
 }
 
 const Core: ICore = {
 
-    cache: function(functionToCacheOrOptions: any) {
+    cache: function(...args: Array<any>) {
 
-        if (typeof arguments[0] === 'function') {
+        if (typeof args[0] === 'function') {
 
-            const target = arguments[0]
+            const target: (...targetArgs: Array<any>) => Promise<any> = args[0]
             const storage = Core.getStorage()
 
             return async function(...targetArgs: Array<any>) {
 
-                const hashKey = generateHashKey(target.name, arguments)
+                const hashKey = generateHashKey(target.name, targetArgs)
 
                 try {
                     return await storage.retrieve(hashKey)
@@ -48,7 +48,7 @@ const Core: ICore = {
         throw 'yeezy-invalid-parameters'
 
         // TODO: Implement cache() function call with options.
-        // if (typeof arguments[0] === 'object') {
+        // if (typeof args[0] === 'object') {
         //     return Core.cache
         // }
     },
@@ -77,9 +77,9 @@ const expiration = 60 * 60 * 24
 
 Core.configure({ storage, expiration })
 
-const fn = (input: number) => {
-    return input + 1
-}
+const fn = (input: number) => new Promise((resolve, reject)  => {
+
+})
 
 const cachedFn = Core.cache(fn)
 
