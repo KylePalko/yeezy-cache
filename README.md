@@ -35,15 +35,12 @@ If your function satisfies this criteria you're ready to start caching. To do so
 ```
 import { cache } from "yeezy-cache"
 
-const getUserByID({ id }) => new Promise((resolve, reject) => {
-    // ...
-    resolve(result)
-})
+const increment(input) => new Promise((resolve, reject) => resolve(input + 1)
 
-export default cache(getUserByID)
+export default cache(increment)
 ```
 
-That's it! The first time you call your cached version of `getUserByID()` the result will be fetched from your external service and cached. All subsequent calls, until the expiration, will be retrieved from your Storage.
+That's it! The first time you call your cached version of `increment()` the result will be fetched from your external service and cached. All subsequent calls, until the expiration, will be retrieved from your Storage.
 
 ## Configuring
 
@@ -67,7 +64,7 @@ import { RedisStorage } from "yeezy-cache-redis"
 export default cache({
     storage: RedisStorage(),
     expiration: 120
-})(getUserByID)
+})(increment)
 ```
 
 ## Key
@@ -80,13 +77,13 @@ Yeezy tries to be as simple as possible to use. However, if you cache two functi
 import { cache } from "yeezy-cache"
 
 export default cache({
-    key: 'get-user-by-id-mysql'
-})(getUserByID)
+    key: 'plus-one-increment'
+})(increment)
 ```
 
 ## Storage
 
-Yeezy ships with an `InMemoryStorage` object for experimentation, but also includes an interface (`Storage`) for extending to any caching mechanism of choice.
+Yeezy ships with an `InMemoryStorage` object for experimentation, but also includes an interface (`IStorage`) for extending to any caching mechanism of choice.
 
 ## Wishlist
 

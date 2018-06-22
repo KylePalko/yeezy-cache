@@ -2,31 +2,31 @@ import IStorage from "./Storage/IStorage"
 import generateHashKey from "./Key/generateHashKey"
 import StorageCacheFailed from "./Storage/Exceptions/StorageCacheFailed"
 import StorageCacheKeyDoesNotExist from "./Storage/Exceptions/StorageCacheKeyDoesNotExist"
-import InMemoryStorage from "../storage/InMemoryStorage";
+import { InMemoryStorage } from "../storage/InMemoryStorage"
 
 export interface ICore {
     storage?: IStorage
     expiration?: number
     getStorage: () => IStorage
-    cache: (...args: Array<any>) => (...targetArgs: Array<any>) => Promise<any>
+    cache: (...args: any[]) => (...targetArgs: any[]) => Promise<any>
     configure: (options: { storage: IStorage, expiration: number }) => void
 }
 
 const Core: ICore = {
 
-    cache: function(...args: Array<any>) {
+    cache: function(...args: any[]) {
 
         if (typeof args[0] === 'function') {
 
-            const target: (...targetArgs: Array<any>) => Promise<any> = args[0]
+            const target: (...targetArgs: any[]) => Promise<any> = args[0]
             const storage = Core.getStorage()
 
-            return async function(...targetArgs: Array<any>) {
+            return async function(...targetArgs: any[]): Promise<any> {
 
                 const hashKey = generateHashKey(target.name, targetArgs)
 
                 try {
-                    return await storage.retrieve(hashKey)
+                    return Promise.resolve(await storage.retrieve(hashKey))
                 } catch (err) {
                     if (err === StorageCacheFailed) {
                         console.warn(`The Storage provided to Yeezy failed to retrieve the cached value for hash key: ${hashKey}`)
@@ -77,16 +77,14 @@ const expiration = 60 * 60 * 24
 
 Core.configure({ storage, expiration })
 
-const fn = (input: number) => new Promise((resolve, reject)  => {
+const fn = (input: number) => new Promise((resolve)  => resolve(input + 1))
 
-})
-
-const cachedFn = Core.cache(fn)
+const cfn = Core.cache(fn)
 
 (async () => {
-    console.log('Run #1', await cachedFn(1))
-    console.log('Run #2', await cachedFn(1))
-    console.log('Run #3', await cachedFn(1))
+    console.log('Run #1', await cfn(1))
+    console.log('Run #2', await cfn(1))
+    console.log('Run #3', await cfn(1))
 })()
 
 export default Core
