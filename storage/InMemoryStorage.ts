@@ -1,7 +1,7 @@
-import IStorage from "../core/Storage/IStorage"
+import { IStorage } from "../core/Storage/IStorage"
 import StorageCacheKeyDoesNotExist from "../core/Storage/Exceptions/StorageCacheKeyDoesNotExist"
 
-class InMemoryStorage implements IStorage {
+export class InMemoryStorage implements IStorage {
 
     private storage: { [key: string]: string } = {}
 
@@ -20,5 +20,3 @@ class InMemoryStorage implements IStorage {
         return Promise.resolve(this.storage[hashKey])
     }
 }
-
-export { InMemoryStorage }

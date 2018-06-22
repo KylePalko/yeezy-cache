@@ -1,8 +1,7 @@
-import IStorage from "./Storage/IStorage"
+import { IStorage } from "./Storage/IStorage"
 import generateHashKey from "./Key/generateHashKey"
 import StorageCacheFailed from "./Storage/Exceptions/StorageCacheFailed"
 import StorageCacheKeyDoesNotExist from "./Storage/Exceptions/StorageCacheKeyDoesNotExist"
-import { InMemoryStorage } from "../storage/InMemoryStorage"
 
 export interface ICore {
     storage?: IStorage
@@ -72,7 +71,9 @@ const Core: ICore = {
     }
 }
 
-
+//
+// import { InMemoryStorage } from "../storage/InMemoryStorage"
+//
 // const fn = (input: number) => new Promise((resolve) => resolve(input + 1))
 //
 // const storage = new InMemoryStorage()

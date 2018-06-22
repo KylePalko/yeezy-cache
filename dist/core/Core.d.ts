@@ -1,4 +1,4 @@
-import IStorage from "./Storage/IStorage";
+import { IStorage } from "./Storage/IStorage";
 export interface ICore {
     storage?: IStorage;
     expiration?: number;

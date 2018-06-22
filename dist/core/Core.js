@@ -62,6 +62,9 @@ const Core = {
         return Core.storage;
     }
 };
+//
+// import { InMemoryStorage } from "../storage/InMemoryStorage"
+//
 // const fn = (input: number) => new Promise((resolve) => resolve(input + 1))
 //
 // const storage = new InMemoryStorage()

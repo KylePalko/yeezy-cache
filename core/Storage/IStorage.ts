@@ -1,4 +1,4 @@
-export default interface IStorage {
+export interface IStorage {
 
     /*
      * Caches a key/value pair in Storage.
