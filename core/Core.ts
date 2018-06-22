@@ -8,7 +8,7 @@ export interface ICore {
     storage?: IStorage
     expiration?: number
     getStorage: () => IStorage
-    cache: (functionToCacheOrOptions: any) => () => Promise<any>
+    cache: (functionToCacheOrOptions: any) => (...targetArgs: any[]) => Promise<any>
     configure: (options: { storage: IStorage, expiration: number }) => void
 }
 
@@ -35,7 +35,7 @@ const Core: ICore = {
                         const value = target(...targetArgs)
                         console.warn(`Yeezy is caching a new value.`)
                         storage.store(hashKey, value)
-                        return Promise.resolve()
+                        return Promise.resolve(value)
                     } else {
                         console.warn(`The Storage provided to Yeezy does not correctly handle exceptions when retrieving values.`)
                         throw 'yeezy-invalid-storage'

@@ -14,7 +14,7 @@ npm install --save yeezy-cache
 yarn add yeezy-cache
 ```
 
-Next you'll need to configure (you only need to do this once in your project), and then you can start caching!
+Next you'll need to configure Yeezy for your use-case (you only need to do this once in your project).
 ```
 import { cache, InMemoryStorage, configure } from "yeezy-cache"
 
@@ -22,7 +22,10 @@ configure({
     storage: new InMemoryStorage(),
     expiration: 60
 })
+```
 
+You're now ready to start caching function return values. To do so, simply wrap your function in the `cache` decorator.
+```
 const getUserByID({ id }) => {
     // Do a database lookup. 
 }
