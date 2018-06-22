@@ -41,7 +41,7 @@ const increment(input) => new Promise((resolve, reject) => resolve(input + 1)
 export default cache(increment)
 ```
 
-That's it! The first time you call your cached version of `increment()` the result will be fetched from your external service and cached. All subsequent calls, until the expiration, will be retrieved from your Storage.
+That's it! The first time you call your cached version of `increment()` the result will be calculated and cached. All subsequent calls, until the expiration, will be retrieved from your Storage.
 
 ## Configuring
 
