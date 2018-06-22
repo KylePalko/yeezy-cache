@@ -3,7 +3,7 @@ export interface ICore {
     storage?: IStorage;
     expiration?: number;
     getStorage: () => IStorage;
-    cache: (functionToCacheOrOptions: any) => () => Promise<any>;
+    cache: (...args: any[]) => (...targetArgs: any[]) => Promise<any>;
     configure: (options: {
         storage: IStorage;
         expiration: number;

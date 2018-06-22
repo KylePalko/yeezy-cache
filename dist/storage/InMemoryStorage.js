@@ -18,4 +18,4 @@ class InMemoryStorage {
         return Promise.resolve(this.storage[hashKey]);
     }
 }
-exports.default = InMemoryStorage;
+exports.InMemoryStorage = InMemoryStorage;
