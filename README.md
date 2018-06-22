@@ -70,9 +70,7 @@ export default cache({
 
 ## Key
 
-**Please read this section!**
-
-Yeezy tries to be as simple as possible to use. However, if you cache two functions with the same name **collisions will occur**. By default Yeezy uses the name of the function for internal cache indexing. Therefore, if you are prone to having two functions named the same it is recommended you use the `key` option to prevent collisions.
+Yeezy tries to be as simple as possible to use. However, if you cache two functions with the same name and same number and types of arguments **collisions will occur**. By default Yeezy uses the name of the function for internal cache indexing. Therefore, if this is a possibility it is required you use the `key` option to prevent collisions.
 
 ```
 import { cache } from "yeezy-cache"
