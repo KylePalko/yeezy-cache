@@ -1,4 +1,5 @@
-# yeezy-cache
+# Yeezy Cache
+##### Why get cache like other modules? Get cache like Yeezy would.
 
 > I'ma clear the cache — [Kanye West](https://genius.com/14749235)
 
