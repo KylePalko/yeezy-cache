@@ -1,0 +1,23 @@
+{
+  "name": "yeezy-cache",
+  "version": "0.1.0",
+  "description": "Simple, light, function caching.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KylePalko/yeezy-cache.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KylePalko/yeezy-cache/issues"
+  },
+  "homepage": "https://github.com/KylePalko/yeezy-cache#readme",
+  "dependencies": {
+    "@types/node": "^10.3.4"
+  }
+}

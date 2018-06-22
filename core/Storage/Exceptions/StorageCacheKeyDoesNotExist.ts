@@ -1,0 +1,1 @@
+export default 'storage-cache-key-does-not-exist'
