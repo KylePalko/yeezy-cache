@@ -1,7 +1,7 @@
 # Yeezy Cache
 ##### Why get cache like other modules? Get cache like Yeezy would.
 
-Yeezy Cache provides simple, light, function result caching ([memoization](https://en.wikipedia.org/wiki/Memoization)). By wrapping a function in the `cache` decorator you can avoid repeatedly reaching out to slower external services (such as a database or external API) or performing intensive processing—assuming your functions are [pure functions](https://en.wikipedia.org/wiki/Pure_function), of course, and therefore can be cached.
+Yeezy Cache provides simple, light, function result caching ([memoization](https://en.wikipedia.org/wiki/Memoization)). By wrapping a function in the `cache` decorator you can avoid repeatedly reaching out to slower external services (such as a database or external API) or performing intensive processing—assuming your functions are [pure](https://en.wikipedia.org/wiki/Pure_function) or [deterministic](https://en.wikipedia.org/wiki/Deterministic_system), of course, and therefore can be cached.
 
 ## Getting Started
 
