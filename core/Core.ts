@@ -33,8 +33,9 @@ const Core: ICore = {
 
             return async function(...targetArgs: any[]): Promise<any> {
 
-                const hashKey = generateHashKey(target.name, targetArgs)
-                const storage = Core.getTargetStorage(target.name)
+                const key = target.name
+                const hashKey = generateHashKey(key, targetArgs)
+                const storage = Core.getTargetStorage(key)
 
                 try {
                     return await storage.retrieve(hashKey)
@@ -47,7 +48,7 @@ const Core: ICore = {
                                 try {
                                     storage.store(hashKey, result)
                                 } catch (err) {
-                                    console.warn(`The Storage provided to Yeezy failed to store a result.`)
+                                    console.warn(`The Storage provided to Yeezy failed to store a result for ${key}`)
                                 }
                                 return Promise.resolve(result)
                             } catch (err) {

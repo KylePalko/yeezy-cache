@@ -8,8 +8,8 @@ export interface ICore {
     targetSpecificExpiration?: {
         [key: string]: number;
     };
-    getStorage: (hashKey: string) => IStorage;
-    setStorage: (hashKey: string, storage: IStorage) => void;
+    getTargetStorage: (hashKey: string) => IStorage;
+    setTargetStorage: (hashKey: string, storage: IStorage) => void;
     cache: (...args: any[]) => (...targetArgs: any[]) => any;
     configure: (options: {
         storage: IStorage;

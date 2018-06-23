@@ -34,7 +34,7 @@ async function testDecrement() {
     const decrement = (n) => n - 1
     const decrementMemoized = cache({
         key: 'decrement-key',
-        storage: 'no'
+        storage: new InMemoryStorage()
     })(decrement)
 
     console.log('Run #1', await decrementMemoized(1));

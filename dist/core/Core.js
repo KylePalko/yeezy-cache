@@ -22,9 +22,9 @@ const Core = {
             const target = args[0];
             return function (...targetArgs) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    const hashKey = generateHashKey_1.default(target.name, targetArgs);
-                    const storage = Core.getStorage(target.name);
-                    console.log(storage);
+                    const key = target.name;
+                    const hashKey = generateHashKey_1.default(key, targetArgs);
+                    const storage = Core.getTargetStorage(key);
                     try {
                         return yield storage.retrieve(hashKey);
                     }
@@ -37,7 +37,7 @@ const Core = {
                                         storage.store(hashKey, result);
                                     }
                                     catch (err) {
-                                        console.warn(`The Storage provided to Yeezy failed to store a result.`);
+                                        console.warn(`The Storage provided to Yeezy failed to store a result for ${key}`);
                                     }
                                     return Promise.resolve(result);
                                 }
@@ -76,7 +76,7 @@ const Core = {
                     key = optionKey === undefined ? target.name : optionKey;
                 }
                 if (optionStorage !== undefined) {
-                    Core.setStorage(key, optionStorage);
+                    Core.setTargetStorage(key, optionStorage);
                 }
                 return Core.cache({ [key]: (...args) => target(...args) }[key]);
             };
@@ -85,22 +85,25 @@ const Core = {
         throw 'yeezy-invalid-parameters';
     },
     configure: function ({ storage, expiration }) {
+        if (storage === undefined || storage === null || storage.store === undefined || storage.clear === undefined || storage.retrieve === undefined) {
+            throw { code: 'storage-does-not-implement-interface', message: 'Your default Storage does not correctly implement the IStorage interface.' };
+        }
         Core.defaultStorage = storage;
         Core.defaultExpiration = expiration;
     },
-    getStorage: function (key) {
+    getTargetStorage: function (key) {
         if (Core.targetSpecificStorages[key] !== undefined) {
             return Core.targetSpecificStorages[key];
         }
-        // if (Core.storage) {
-        //     throw { code: 'storage-does-not-implement-interface', message: 'Your global Storage does not correctly implement the IStore interface.' }
-        // }
         if (Core.defaultStorage === undefined) {
             throw { code: 'storage-not-set', message: 'You must configure the default Storage or set the Storage option on the cache function call.' };
         }
         return Core.defaultStorage;
     },
-    setStorage: function (key, storage) {
+    setTargetStorage: function (key, storage) {
+        if (storage === undefined || storage === null || storage.store === undefined || storage.clear === undefined || storage.retrieve === undefined) {
+            throw { code: 'storage-does-not-implement-interface', message: `Your target Storage for ${key} does not correctly implement the IStorage interface.` };
+        }
         Core.targetSpecificStorages[key] = storage;
     }
 };
