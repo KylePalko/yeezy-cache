@@ -13,16 +13,18 @@ const StorageCacheFailed_1 = require("./Storage/Exceptions/StorageCacheFailed");
 const StorageCacheKeyDoesNotExist_1 = require("./Storage/Exceptions/StorageCacheKeyDoesNotExist");
 const isPromise_1 = require("./Helpers/isPromise");
 const Core = {
-    expiration: undefined,
     defaultStorage: undefined,
-    storages: {},
+    targetSpecificStorages: {},
+    defaultExpiration: undefined,
+    targetSpecificExpiration: {},
     cache: function (...args) {
         if (typeof args[0] === 'function') {
             const target = args[0];
             return function (...targetArgs) {
                 return __awaiter(this, void 0, void 0, function* () {
                     const hashKey = generateHashKey_1.default(target.name, targetArgs);
-                    const storage = Core.getStorage(hashKey);
+                    const storage = Core.getStorage(target.name);
+                    console.log(storage);
                     try {
                         return yield storage.retrieve(hashKey);
                     }
@@ -84,11 +86,11 @@ const Core = {
     },
     configure: function ({ storage, expiration }) {
         Core.defaultStorage = storage;
-        Core.expiration = expiration;
+        Core.defaultExpiration = expiration;
     },
     getStorage: function (key) {
-        if (Core.storages[key] !== undefined) {
-            return Core.storages[key];
+        if (Core.targetSpecificStorages[key] !== undefined) {
+            return Core.targetSpecificStorages[key];
         }
         // if (Core.storage) {
         //     throw { code: 'storage-does-not-implement-interface', message: 'Your global Storage does not correctly implement the IStore interface.' }
@@ -99,7 +101,7 @@ const Core = {
         return Core.defaultStorage;
     },
     setStorage: function (key, storage) {
-        Core.storages[key] = storage;
+        Core.targetSpecificStorages[key] = storage;
     }
 };
 exports.default = Core;

@@ -2,7 +2,7 @@ import { IStorage } from "./Storage/IStorage"
 import generateHashKey from "./Key/generateHashKey"
 import StorageCacheFailed from "./Storage/Exceptions/StorageCacheFailed"
 import StorageCacheKeyDoesNotExist from "./Storage/Exceptions/StorageCacheKeyDoesNotExist"
-import isPromise from "./Helpers/isPromise";
+import isPromise from "./Helpers/isPromise"
 
 type TargetFn = (...targetArgs: any[]) => any
 
@@ -11,8 +11,8 @@ export interface ICore {
     targetSpecificStorages: { [key: string]: IStorage }
     defaultExpiration?: number
     targetSpecificExpiration?: { [key: string]: number }
-    getStorage: (hashKey: string) => IStorage
-    setStorage: (hashKey: string, storage: IStorage) => void
+    getTargetStorage: (hashKey: string) => IStorage
+    setTargetStorage: (hashKey: string, storage: IStorage) => void
     cache: (...args: any[]) => (...targetArgs: any[]) => any
     configure: (options: { storage: IStorage, expiration: number }) => void
 }
@@ -34,7 +34,7 @@ const Core: ICore = {
             return async function(...targetArgs: any[]): Promise<any> {
 
                 const hashKey = generateHashKey(target.name, targetArgs)
-                const storage = Core.getStorage(hashKey)
+                const storage = Core.getTargetStorage(target.name)
 
                 try {
                     return await storage.retrieve(hashKey)
@@ -89,7 +89,7 @@ const Core: ICore = {
                 }
 
                 if (optionStorage !== undefined) {
-                    Core.setStorage(key, optionStorage)
+                    Core.setTargetStorage(key, optionStorage)
                 }
 
                 return Core.cache({ [key]: (...args: any[]) => target(...args) }[key])
@@ -101,19 +101,20 @@ const Core: ICore = {
     },
 
     configure: function({ storage, expiration }: { storage: IStorage, expiration: number }) {
+
+        if (storage === undefined || storage === null || storage.store === undefined || storage.clear === undefined || storage.retrieve === undefined) {
+            throw { code: 'storage-does-not-implement-interface', message: 'Your default Storage does not correctly implement the IStorage interface.' }
+        }
         Core.defaultStorage = storage
+
         Core.defaultExpiration = expiration
     },
 
-    getStorage: function(key: string): IStorage {
+    getTargetStorage: function(key: string): IStorage {
 
         if (Core.targetSpecificStorages[key] !== undefined) {
             return Core.targetSpecificStorages[key]
         }
-
-        // if (Core.storage) {
-        //     throw { code: 'storage-does-not-implement-interface', message: 'Your global Storage does not correctly implement the IStore interface.' }
-        // }
 
         if (Core.defaultStorage === undefined) {
             throw { code: 'storage-not-set', message: 'You must configure the default Storage or set the Storage option on the cache function call.' }
@@ -123,7 +124,12 @@ const Core: ICore = {
 
     },
 
-    setStorage: function(key: string, storage: IStorage) {
+    setTargetStorage: function(key: string, storage: IStorage) {
+
+        if (storage === undefined || storage === null || storage.store === undefined || storage.clear === undefined || storage.retrieve === undefined) {
+            throw { code: 'storage-does-not-implement-interface', message: `Your target Storage for ${key} does not correctly implement the IStorage interface.` }
+        }
+
         Core.targetSpecificStorages[key] = storage
     }
 }
