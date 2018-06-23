@@ -1,8 +1,12 @@
 import { IStorage } from "./Storage/IStorage";
 export interface ICore {
-    storage?: IStorage;
+    defaultStorage?: IStorage;
+    storages: {
+        [hashKey: string]: IStorage;
+    };
     expiration?: number;
-    getStorage: () => IStorage;
+    getStorage: (hashKey: string) => IStorage;
+    setStorage: (hashKey: string, storage: IStorage) => void;
     cache: (...args: any[]) => (...targetArgs: any[]) => Promise<any>;
     configure: (options: {
         storage: IStorage;
