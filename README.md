@@ -76,11 +76,3 @@ export default cache({
 ## Storage
 
 Yeezy ships with an `InMemoryStorage` object for experimentation, but also includes an interface (`IStorage`) for extending to any caching mechanism of choice.
-
-## Wishlist
-
-- Create Redis Storage module (`yeezy-cache-redis`).
-- Tests
-- Support specifying key hashing or encoding algorithm (`base-64`, `sha-256`, `sha-512` etc.)
-- Support options for encrypting values for sensitive data storage.
-- Support logging options (e.g., log when caching, log when pulled from cache, etc.)
