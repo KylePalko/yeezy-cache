@@ -1,27 +1,58 @@
 const { cache, configure, InMemoryStorage } = require('../dist/index')
-const { readFileSync } = require('fs')
 
 configure({
     storage: new InMemoryStorage(),
     expiration: 60
 })
 
-const read = cache((path) => new Promise((resolve) => resolve(readFileSync(`${__dirname}/${path}`, 'utf8'))))
-const increment = cache((n) => n + 1)
+async function testDelay() {
 
-async function test() {
-    console.log('Run #1', await read('./file.md'));
-    console.log('Run #2', await read('./file.md'));
-    console.log('Run #3', await read('./file2.md'));
-    console.log('Run #4', await read('./file.md'));
-    console.log('Run #5', await read('./file2.md'));
+    const delay = (time) => new Promise((resolve, reject) => setTimeout(() => resolve('Delayed.'), time))
+    const delayMemoized = cache(delay)
 
-    console.log('Run #6', await increment(1));
-    console.log('Run #7', await increment(1));
-    console.log('Run #8', await increment(1));
-    console.log('Run #9', await increment(1));
+    console.log('Run #1', await delayMemoized(1000));
+    console.log('Run #2', await delayMemoized(1000));
+    console.log('Run #3', await delayMemoized(1000));
+    console.log('Run #4', await delayMemoized(1000));
+    console.log('Run #5', await delayMemoized(1000));
 }
 
-test().catch((err) => {
-    console.log(`Test failed.`, err)
-})
+async function testIncrement() {
+
+    const increment = (n) => n + 1
+    const incrementMemorized = cache(increment)
+
+    console.log('Run #1', await incrementMemorized(1));
+    console.log('Run #2', await incrementMemorized(1));
+    console.log('Run #3', await incrementMemorized(1));
+    console.log('Run #4', await incrementMemorized(1));
+    console.log('Run #5', await incrementMemorized(1));
+}
+
+async function testDecrement() {
+
+    const decrement = (n) => n - 1
+    const decrementMemoized = cache({
+        key: 'decrement-key',
+        storage: 'no'
+    })(decrement)
+
+    console.log('Run #1', await decrementMemoized(1));
+    console.log('Run #2', await decrementMemoized(1));
+    console.log('Run #3', await decrementMemoized(1));
+    console.log('Run #4', await decrementMemoized(1));
+    console.log('Run #5', await decrementMemoized(1));
+}
+
+async function runTests() {
+
+    try {
+        await testIncrement()
+        await testDecrement()
+        await testDelay()
+    } catch (err) {
+        console.error(`A test failed: ${err}.`)
+    }
+}
+
+runTests().catch()

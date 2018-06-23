@@ -36,7 +36,7 @@ export default cache(increment)
 
 That's it! The first time you call your cached version of `increment()` the result will be calculated and cached. All subsequent calls, until the expiration, will be retrieved from your Storage.
 
-## Configuring
+## Configuring Yeezy
 
 Some options can be set at the global level. The `storage` option informs Yeezy where to store your cached items. The `expiration` option sets the default amount of time (in seconds) to cache results.
 
@@ -61,9 +61,9 @@ export default cache({
 })(increment)
 ```
 
-## Key
+## Preventing Collisions
 
-Yeezy tries to be as simple as possible to use. However, if you cache two functions with the same name and same number and types of arguments **collisions will occur**. By default Yeezy hashes the function name and arguments to produce a key which references the functions cache. Therefore, in these edge-cases, it is required you use the `key` option to prevent collisions.
+Yeezy tries to be as simple as possible to use. However, if you cache two functions with the same name and same number and types of arguments **collisions will occur**. By default Yeezy hashes the function name and arguments to produce a key which references the function's cached result. Therefore, in these edge-cases, it is required you use the `key` option to prevent collisions.
 
 ```
 import { cache } from "yeezy-cache"

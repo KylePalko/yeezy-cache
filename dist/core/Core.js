@@ -31,7 +31,12 @@ const Core = {
                             if (isPromise_1.default(target)) {
                                 try {
                                     const result = yield target(...targetArgs);
-                                    storage.store(hashKey, result);
+                                    try {
+                                        storage.store(hashKey, result);
+                                    }
+                                    catch (err) {
+                                        console.warn(`The Storage provided to Yeezy failed to store a result.`);
+                                    }
                                     return Promise.resolve(result);
                                 }
                                 catch (err) {
@@ -40,7 +45,12 @@ const Core = {
                             }
                             try {
                                 const result = target(...targetArgs);
-                                storage.store(hashKey, result);
+                                try {
+                                    storage.store(hashKey, result);
+                                }
+                                catch (err) {
+                                    console.warn(`The Storage provided to Yeezy failed to store a result.`);
+                                }
                                 return Promise.resolve(result);
                             }
                             catch (err) {
@@ -55,19 +65,30 @@ const Core = {
                 });
             };
         }
-        // if (typeof args[0] === 'object') {
-        //     Core.setStorage()
-        // }
-        console.warn(`Yeezy's cache did not receive a function or option parameter.`);
+        if (typeof args[0] === 'object') {
+            const { storage: optionStorage, key: optionKey } = args[0];
+            return function (...args) {
+                const target = args[0];
+                let key;
+                if (optionKey !== undefined) {
+                    key = optionKey === undefined ? target.name : optionKey;
+                }
+                if (optionStorage !== undefined) {
+                    Core.setStorage(key, optionStorage);
+                }
+                return Core.cache({ [key]: (...args) => target(...args) }[key]);
+            };
+        }
+        console.warn(`Yeezy did not receive a function or option parameter.`);
         throw 'yeezy-invalid-parameters';
     },
     configure: function ({ storage, expiration }) {
         Core.defaultStorage = storage;
         Core.expiration = expiration;
     },
-    getStorage: function (hashKey) {
-        if (Core.storages[hashKey] !== undefined) {
-            return Core.storages[hashKey];
+    getStorage: function (key) {
+        if (Core.storages[key] !== undefined) {
+            return Core.storages[key];
         }
         // if (Core.storage) {
         //     throw { code: 'storage-does-not-implement-interface', message: 'Your global Storage does not correctly implement the IStore interface.' }
@@ -77,31 +98,8 @@ const Core = {
         }
         return Core.defaultStorage;
     },
-    setStorage: function (hashKey, storage) {
-        Core.storages[hashKey] = storage;
+    setStorage: function (key, storage) {
+        Core.storages[key] = storage;
     }
 };
-//
-// import { InMemoryStorage } from "../storage/InMemoryStorage"
-//
-// const fn = (input: number) => new Promise((resolve) => resolve(input + 1))
-//
-// const storage = new InMemoryStorage()
-// const expiration = 60 * 60 * 24
-// Core.configure({ storage, expiration })
-//
-// const run = async () => {
-//     const cfn = Core.cache(fn)
-//     console.log('Run #1:', await cfn(1))
-//     console.log('Run #2:', await cfn(1))
-//     console.log('Run #3:', await cfn(2))
-//     console.log('Run #4:', await cfn(1))
-//     console.log('Run #5:', await cfn(1))
-//     console.log('Run #6:', await cfn(1))
-//     console.log('Run #7:', await cfn(1))
-//     console.log('Run #8:', await cfn(2))
-//     console.log('Run #9:', await cfn(3))
-// }
-//
-// run().then().catch()
 exports.default = Core;
