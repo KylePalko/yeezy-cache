@@ -106,28 +106,4 @@ const Core: ICore = {
     }
 }
 
-//
-// import { InMemoryStorage } from "../storage/InMemoryStorage"
-//
-// const fn = (input: number) => new Promise((resolve) => resolve(input + 1))
-//
-// const storage = new InMemoryStorage()
-// const expiration = 60 * 60 * 24
-// Core.configure({ storage, expiration })
-//
-// const run = async () => {
-//     const cfn = Core.cache(fn)
-//     console.log('Run #1:', await cfn(1))
-//     console.log('Run #2:', await cfn(1))
-//     console.log('Run #3:', await cfn(2))
-//     console.log('Run #4:', await cfn(1))
-//     console.log('Run #5:', await cfn(1))
-//     console.log('Run #6:', await cfn(1))
-//     console.log('Run #7:', await cfn(1))
-//     console.log('Run #8:', await cfn(2))
-//     console.log('Run #9:', await cfn(3))
-// }
-//
-// run().then().catch()
-
 export default Core
