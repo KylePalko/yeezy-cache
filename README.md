@@ -29,7 +29,7 @@ The only requirement for memoization is that a function must determine its outpu
 ```
 import { cache } from "yeezy-cache"
 
-const increment(input) => new Promise((resolve, reject) => resolve(input + 1)
+const increment(input) => input + 1
 
 export default cache(increment)
 ```
