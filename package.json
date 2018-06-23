@@ -17,7 +17,7 @@
     "url": "https://github.com/KylePalko/yeezy-cache/issues"
   },
   "homepage": "https://github.com/KylePalko/yeezy-cache#readme",
-  "dependencies": {
+  "devDependencies": {
     "@types/node": "^10.3.4"
   }
 }
