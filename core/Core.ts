@@ -1,5 +1,5 @@
 import { IStorage } from "./Storage/IStorage"
-import generateHashKey from "./Key/generateHashKey"
+import generateHashKey from "./HashKey/generateHashKey"
 import StorageCacheFailed from "./Storage/Exceptions/StorageCacheFailed"
 import StorageCacheKeyDoesNotExist from "./Storage/Exceptions/StorageCacheKeyDoesNotExist"
 import isPromise from "./Helpers/isPromise"
@@ -33,9 +33,9 @@ const Core: ICore = {
 
             return async function(...targetArgs: any[]): Promise<any> {
 
-                const key = target.name
-                const hashKey = generateHashKey(key, targetArgs)
-                const storage = Core.getTargetStorage(key)
+                const targetRef = target.name
+                const hashKey = generateHashKey(targetRef, targetArgs)
+                const storage = Core.getTargetStorage(targetRef)
 
                 try {
                     return await storage.retrieve(hashKey)
@@ -48,7 +48,7 @@ const Core: ICore = {
                                 try {
                                     storage.store(hashKey, result)
                                 } catch (err) {
-                                    console.warn(`The Storage provided to Yeezy failed to store a result for ${key}`)
+                                    console.warn(`The Storage provided to Yeezy failed to store a result for ${targetRef}`)
                                 }
                                 return Promise.resolve(result)
                             } catch (err) {
@@ -78,22 +78,22 @@ const Core: ICore = {
 
         if (typeof args[0] === 'object') {
 
-            const { storage: optionStorage, key: optionKey } = args[0]
+            const { storage: targetStorage, ref: targetRef } = args[0]
 
             return function(...args: any[]) {
 
                 const target: TargetFn = args[0]
 
-                let key
-                if (optionKey !== undefined) {
-                    key = optionKey === undefined ? target.name : optionKey
+                let ref
+                if (targetRef !== undefined) {
+                    ref = targetRef === undefined ? target.name : targetRef
                 }
 
-                if (optionStorage !== undefined) {
-                    Core.setTargetStorage(key, optionStorage)
+                if (targetStorage !== undefined) {
+                    Core.setTargetStorage(ref, targetStorage)
                 }
 
-                return Core.cache({ [key]: (...args: any[]) => target(...args) }[key])
+                return Core.cache({ [ref]: (...args: any[]) => target(...args) }[ref])
             }
         }
 
