@@ -1,7 +1,7 @@
 {
   "name": "yeezy-cache",
   "version": "0.3.0",
-  "description": "Simple, light, function caching.",
+  "description": "Simple function memoization.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/KylePalko/yeezy-cache.git"
   },
-  "author": "",
+  "author": "Kyle Palko <kylepalko@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/KylePalko/yeezy-cache/issues"
